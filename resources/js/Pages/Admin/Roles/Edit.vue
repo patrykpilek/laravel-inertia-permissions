@@ -6,13 +6,20 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
+const props = defineProps({
+    role: {
+        type: Object,
+        required: true
+    }
+})
+
 const form = useForm({
-    name: '',
+    name: props.role.name
 });
 </script>
 
 <template>
-    <Head title="Create new role"/>
+    <Head title="Update role"/>
 
     <AdminLayout>
         <div class="max-w-7xl mx-auto py-4">
@@ -20,8 +27,8 @@ const form = useForm({
                 <Link :href="route('roles.index')" class="px-3 py-2 text-white font-semibold bg-indigo-500 hover:bg-indigo-700 rounded">Back</Link>
             </div>
             <div class="mt-6 max-w-md mx-auto bg-slate-100 shadow-lg rounded-lg p-6">
-                <h1 class="text-2xl p-4">Create new role</h1>
-                <form @submit.prevent="form.post(route('roles.store'));">
+                <h1 class="text-2xl p-4">Update role</h1>
+                <form @submit.prevent="form.put(route('roles.update', role.id));">
                     <div>
                         <InputLabel for="name" value="Name" />
 
@@ -39,7 +46,7 @@ const form = useForm({
 
                     <div class="flex items-center mt-4">
                         <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                            Create
+                            Update
                         </PrimaryButton>
                     </div>
                 </form>
