@@ -1,12 +1,34 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import {Head, Link} from '@inertiajs/vue3';
+import {Head, Link, useForm} from '@inertiajs/vue3';
+import {ref} from "vue";
 import Table from "@/Components/Table.vue";
 import TableHeaderCell from "@/Components/TableHeaderCell.vue";
 import TableDataCell from "@/Components/TableDataCell.vue";
 import TableRow from "@/Components/TableRow.vue";
+import Modal from "@/Components/Modal.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 defineProps(['permissions']);
+
+const form = useForm({});
+
+const showConfirmDeletePermissionModal = ref(false);
+
+const confirmDeletePermission = () => {
+    showConfirmDeletePermissionModal.value = true;
+}
+
+const closeModal = () => {
+    showConfirmDeletePermissionModal.value = false;
+}
+
+const deletePermission = (id) => {
+    form.delete(route('permissions.destroy', id), {
+        onSuccess: () => closeModal()
+    });
+}
 
 </script>
 
@@ -35,7 +57,18 @@ defineProps(['permissions']);
                             <TableDataCell>{{ permission.name }}</TableDataCell>
                             <TableDataCell class="space-x-4">
                                 <Link :href="route('permissions.edit', permission.id)" class="text-green-400 hover:text-green-600">Edit</Link>
-                                <Link :href="route('permissions.destroy', permission.id)" method="DELETE" as="button" class="text-red-400 hover:text-red-600">Delete</Link>
+                                <button @click="confirmDeletePermission" class="text-red-400 hover:text-red-600">
+                                    Delete
+                                </button>
+                                <Modal :show="showConfirmDeletePermissionModal" @close="closeModal">
+                                    <div class="p-6">
+                                        <h2 class="dark:text-white text-lg font-semibold text-slate-800">Are you sure to delete this role?</h2>
+                                        <div class="mt-6 flex space-x-4">
+                                            <DangerButton @click="deletePermission(permission.id)">Delete</DangerButton>
+                                            <SecondaryButton @click="closeModal">Cancel</SecondaryButton>
+                                        </div>
+                                    </div>
+                                </Modal>
                             </TableDataCell>
                         </TableRow>
                     </template>

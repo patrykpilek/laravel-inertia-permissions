@@ -15,6 +15,7 @@ defineProps(['users']);
 const form = useForm({});
 
 const showConfirmDeleteUserModal = ref(false);
+
 const confirmDeleteUser = () => {
     showConfirmDeleteUserModal.value = true;
 }
